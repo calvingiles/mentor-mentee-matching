@@ -51,7 +51,7 @@ class Ranking(models.Model):
     rank = models.IntegerField(
         null=True,
         validators=[
-            MaxValueValidator(10),
+            # MaxValueValidator(10),
             MinValueValidator(1)
         ]
     )
