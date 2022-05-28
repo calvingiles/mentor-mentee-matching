@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+    application:
+        restart: on-failure
+        image: heroku/heroku:20
+        working_dir: /project
+        volumes:
+            - ".:/project"
+        ports:
+            - "${PORT_PREFIX:-588}80:8000"
+        env_file:
+            - dev.env
+        environment:
+          DATABASE_URL: "postgres://postgres:password@database:5432/app"
+        command:
+            [
+                "python",
+                "-m",
+                "gunicorn",
+                "--reload",
+                "web.wsgi",
+            ]
+        depends_on:
+            - database
+
+    database:
+        restart: on-failure
+        image: postgres:11-alpine
+        ports:
+            - "${PORT_PREFIX:-588}32:5432"
+        environment:
+            POSTGRES_DB: "app"
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "password"
